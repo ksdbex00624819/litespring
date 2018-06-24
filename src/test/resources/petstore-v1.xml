@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<beans>
+
+    <bean id="petStore" class="com.like.zero.spring.service.v1.PetStoreService"></bean>
+
+    <bean id="invalidBean" class="com.like.zero.spring.service.v1.xxx"></bean>
+</beans>
