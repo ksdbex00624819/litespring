@@ -1,7 +1,5 @@
 package com.like.zero.spring.context.support;
 
-import com.like.zero.spring.beans.factory.support.DefaultBeanFactory;
-import com.like.zero.spring.core.io.ClassPathResource;
 import com.like.zero.spring.core.io.Resource;
 
 /**
@@ -16,7 +14,7 @@ public class ClassPathXmlApplicationContext extends AbstractApplicationContext {
 
     @Override
     protected Resource getResourceByPath(String configFile) {
-        return new ClassPathResource(configFile);
+        return getResource(configFile);
     }
 
 }

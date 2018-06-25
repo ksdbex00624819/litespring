@@ -1,6 +1,5 @@
 package com.like.zero.spring.context.support;
 
-import com.like.zero.spring.core.io.FileSystemResource;
 import com.like.zero.spring.core.io.Resource;
 
 /**
@@ -15,7 +14,7 @@ public class FileSystemXmlApplicationContext extends AbstractApplicationContext 
 
     @Override
     protected Resource getResourceByPath(String configFile) {
-        Resource resource = new FileSystemResource(configFile);
+        Resource resource = getResource(configFile);
         return resource;
     }
 
