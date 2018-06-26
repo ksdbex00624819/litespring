@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by like
  * 2018/6/9
  */
-public class DefaultBeanFactory implements ConfigurableBeanFactory, BeanDefinitionRegistry {
+public class DefaultBeanFactory extends DefaultSingletonBeanRegistry implements ConfigurableBeanFactory, BeanDefinitionRegistry {
 
     private ClassLoader classLoader;
 
@@ -38,11 +38,16 @@ public class DefaultBeanFactory implements ConfigurableBeanFactory, BeanDefiniti
         if (beanDefinition == null) {
             throw new BeanCreationException("Bean Definition does not exist");
         }
-        ClassLoader classLoader = this.getBeanClassLoader();
-
         try {
-            Class<?> clazz = classLoader.loadClass(beanDefinition.getBeanClassName());
-            return clazz.newInstance();
+            if (beanDefinition.isSingleton()) {
+                Object bean = getSingleton(beanId);
+                if (getSingleton(beanId) == null) {
+                    bean = createBean(beanDefinition);
+                    registerSingleton(beanId, bean);
+                }
+                return bean;
+            }
+            return createBean(beanDefinition);
         } catch (Exception e) {
             throw new BeanCreationException("create bean for " + beanDefinition.getBeanClassName());
         }
@@ -57,5 +62,17 @@ public class DefaultBeanFactory implements ConfigurableBeanFactory, BeanDefiniti
     @Override
     public ClassLoader getBeanClassLoader() {
         return this.classLoader != null ? this.classLoader : ClassUtils.getDefaultClassLoader();
+    }
+
+    private Object createBean(BeanDefinition beanDefinition){
+        ClassLoader classLoader = this.getBeanClassLoader();
+        String beanClassName = beanDefinition.getBeanClassName();
+        try {
+            Class<?> clazz = classLoader.loadClass(beanDefinition.getBeanClassName());
+            return clazz.newInstance();
+        } catch (Exception e) {
+            throw new BeanCreationException("create bean for "+ beanClassName +" failed",e);
+        }
+
     }
 }

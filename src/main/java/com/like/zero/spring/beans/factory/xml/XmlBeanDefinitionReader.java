@@ -1,5 +1,6 @@
 package com.like.zero.spring.beans.factory.xml;
 
+import com.like.zero.spring.beans.BeanDefinition;
 import com.like.zero.spring.beans.factory.BeanDefinitionStoreException;
 import com.like.zero.spring.beans.factory.support.BeanDefinitionRegistry;
 import com.like.zero.spring.beans.factory.support.GenericBeanDefinition;
@@ -21,6 +22,8 @@ public class XmlBeanDefinitionReader {
     private static final String ID_ATTRIBUTE = "id";
 
     private static final String CLASS_ATTRIBUTE = "class";
+
+    private static final String SCOPE = "scope";
 
     private final BeanDefinitionRegistry beanDefinitionRegistry;
 
@@ -59,7 +62,12 @@ public class XmlBeanDefinitionReader {
                 // 解析<bean>中的属性，如id,class等
                 String id = element.attributeValue(ID_ATTRIBUTE);
                 String beanClassName = element.attributeValue(CLASS_ATTRIBUTE);
-                beanDefinitionRegistry.registerBeanDefinition(id, new GenericBeanDefinition(id, beanClassName));
+                String scope = element.attributeValue(SCOPE);
+                BeanDefinition beanDefinition = new GenericBeanDefinition(id, beanClassName);
+                if (scope != null) {
+                    beanDefinition.setScope(scope);
+                }
+                beanDefinitionRegistry.registerBeanDefinition(id, beanDefinition);
 //                beanDefinitionMap.put(id, new GenericBeanDefinition(id, beanClassName));
             }
 

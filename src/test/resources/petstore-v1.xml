@@ -3,5 +3,8 @@
 
     <bean id="petStore" class="com.like.zero.spring.service.v1.PetStoreService"></bean>
 
+    <bean id="petStorePrototype" class="com.like.zero.spring.service.v1.PetStorePrototypeService" scope="prototype"
+    ></bean>
+
     <bean id="invalidBean" class="com.like.zero.spring.service.v1.xxx"></bean>
 </beans>
