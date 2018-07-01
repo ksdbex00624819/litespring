@@ -1,10 +1,16 @@
 package com.like.zero.spring.beans.factory.xml;
 
 import com.like.zero.spring.beans.BeanDefinition;
+import com.like.zero.spring.beans.PropertyValue;
 import com.like.zero.spring.beans.factory.BeanDefinitionStoreException;
+import com.like.zero.spring.beans.factory.config.RuntimeBeanReference;
+import com.like.zero.spring.beans.factory.config.TypedStringValue;
 import com.like.zero.spring.beans.factory.support.BeanDefinitionRegistry;
 import com.like.zero.spring.beans.factory.support.GenericBeanDefinition;
 import com.like.zero.spring.core.io.Resource;
+import com.like.zero.spring.util.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
@@ -19,13 +25,23 @@ import java.util.Iterator;
  */
 public class XmlBeanDefinitionReader {
 
-    private static final String ID_ATTRIBUTE = "id";
+    public static final String ID_ATTRIBUTE = "id";
 
-    private static final String CLASS_ATTRIBUTE = "class";
+    public static final String CLASS_ATTRIBUTE = "class";
 
-    private static final String SCOPE = "scope";
+    public static final String SCOPE = "scope";
+
+    public static final String PROPERTY_ELEMENT = "property";
+
+    public static final String NAME_ATTRIBUTE = "name";
+
+    public static final String REF_ATTRIBUTE = "ref";
+
+    public static final String VALUE_ATTRIBUTE = "value";
 
     private final BeanDefinitionRegistry beanDefinitionRegistry;
+
+    protected static final Log logger = LogFactory.getLog(XmlBeanDefinitionReader.class);
 
     public XmlBeanDefinitionReader(BeanDefinitionRegistry beanDefinitionRegistry) {
         this.beanDefinitionRegistry = beanDefinitionRegistry;
@@ -67,8 +83,9 @@ public class XmlBeanDefinitionReader {
                 if (scope != null) {
                     beanDefinition.setScope(scope);
                 }
+                // 解析bean内的标签
+                parsePropertyElement(element, beanDefinition);
                 beanDefinitionRegistry.registerBeanDefinition(id, beanDefinition);
-//                beanDefinitionMap.put(id, new GenericBeanDefinition(id, beanClassName));
             }
 
         } catch (Exception e) {
@@ -84,4 +101,43 @@ public class XmlBeanDefinitionReader {
         }
     }
 
+    public void parsePropertyElement(Element beanElement, BeanDefinition beanDefinition) {
+        Iterator<Element> elementIterator = beanElement.elementIterator(PROPERTY_ELEMENT);
+        while (elementIterator.hasNext()) {
+            Element propertyElement = elementIterator.next();// 这里取到的是<property>
+            // 解析<property>中的属性，如name,ref,value等
+            String propertyName = propertyElement.attributeValue(NAME_ATTRIBUTE);
+            if (!StringUtils.hasLength(propertyName)) {
+                logger.fatal("Tag property must have a 'name' attribute");
+                return;
+            }
+
+            Object value = parsePropertyValue(propertyElement, beanDefinition, propertyName);
+            PropertyValue propertyValue = new PropertyValue(propertyName, value);
+            beanDefinition.getPropertyValues().add(propertyValue);
+        }
+
+    }
+
+    public Object parsePropertyValue(Element element, BeanDefinition beanDefinition, String propertyName) {
+        String elementName = (propertyName != null) ? "<property> element for property '" + propertyName + "'" : "<constructor-arg> element";
+
+        boolean hasRefAttribute = element.attribute(REF_ATTRIBUTE) != null;
+        boolean hasValueAttribute = element.attribute(VALUE_ATTRIBUTE) != null;
+
+        if (hasRefAttribute) {
+            String refName = element.attributeValue(REF_ATTRIBUTE);
+            if (!StringUtils.hasLength(refName)) {
+
+            }
+            RuntimeBeanReference runtimeBeanReference = new RuntimeBeanReference(refName);
+            return runtimeBeanReference;
+        } else if (hasValueAttribute) {
+            TypedStringValue typedStringValue = new TypedStringValue(element.attributeValue(VALUE_ATTRIBUTE));
+            return typedStringValue;
+        } else {
+            throw new RuntimeException(elementName + "must specify a ref or value");
+        }
+
+    }
 }

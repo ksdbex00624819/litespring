@@ -1,6 +1,10 @@
 package com.like.zero.spring.beans.factory.support;
 
 import com.like.zero.spring.beans.BeanDefinition;
+import com.like.zero.spring.beans.PropertyValue;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by like
@@ -17,6 +21,8 @@ public class GenericBeanDefinition implements BeanDefinition {
     private boolean singleton = true;
 
     private boolean prototype = false;
+
+    private List<PropertyValue> propertyValues = new ArrayList<>();
 
     public GenericBeanDefinition(String id, String beanClassName) {
         this.id = id;
@@ -48,5 +54,10 @@ public class GenericBeanDefinition implements BeanDefinition {
         this.scope = scope;
         this.singleton = SCOPE_SINGLETON.equals(scope) || SCOPE_DEFAULT.equals(scope);
         this.prototype = SCOPE_PROTOTYPE.equals(scope);
+    }
+
+    @Override
+    public List<PropertyValue> getPropertyValues() {
+        return this.propertyValues;
     }
 }

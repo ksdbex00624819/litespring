@@ -1,6 +1,5 @@
 package com.like.zero.spring.context.support;
 
-import com.like.zero.spring.beans.BeanDefinition;
 import com.like.zero.spring.beans.factory.support.DefaultBeanFactory;
 import com.like.zero.spring.beans.factory.xml.XmlBeanDefinitionReader;
 import com.like.zero.spring.context.ApplicationContext;
@@ -26,15 +25,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
     protected abstract Resource getResourceByPath(String configFile);
 
     @Override
-    public BeanDefinition getBeanDefinition(String beanId) {
-        return defaultBeanFactory.getBeanDefinition(beanId);
-    }
-
-    @Override
     public Object getBean(String beanId) {
         return defaultBeanFactory.getBean(beanId);
     }
-
 
 
 }

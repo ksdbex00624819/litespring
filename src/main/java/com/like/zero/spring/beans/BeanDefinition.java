@@ -1,5 +1,7 @@
 package com.like.zero.spring.beans;
 
+import java.util.List;
+
 /**
  * Created by like
  * 2018/6/9
@@ -21,4 +23,6 @@ public interface BeanDefinition {
     String getScope();
 
     void setScope(String scope);
+
+    List<PropertyValue> getPropertyValues();
 }
