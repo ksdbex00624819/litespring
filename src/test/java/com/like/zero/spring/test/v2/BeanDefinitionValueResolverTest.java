@@ -1,4 +1,4 @@
-package com.like.zero.spring.v2;
+package com.like.zero.spring.test.v2;
 
 import com.like.zero.spring.beans.factory.config.RuntimeBeanReference;
 import com.like.zero.spring.beans.factory.config.TypedStringValue;
@@ -12,18 +12,18 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Created by like
- * 2018/7/1
+ * Created by like 2018/7/1
  */
 public class BeanDefinitionValueResolverTest {
 
     BeanDefinitionValueResolver resolver;
 
     @Before
-    public void prepareBeanDefinitionValueResolver(){
+    public void prepareBeanDefinitionValueResolver() {
         DefaultBeanFactory defaultBeanFactory = new DefaultBeanFactory();
-        XmlBeanDefinitionReader xmlBeanDefinitionReader = new XmlBeanDefinitionReader(defaultBeanFactory);
-        xmlBeanDefinitionReader.loadBeanDefinition(new ClassPathResource("petstore-v2.xml"));
+        XmlBeanDefinitionReader xmlBeanDefinitionReader = new XmlBeanDefinitionReader(
+                defaultBeanFactory);
+        xmlBeanDefinitionReader.loadBeanDefinitions(new ClassPathResource("petstore-v2.xml"));
         resolver = new BeanDefinitionValueResolver(defaultBeanFactory);
     }
 

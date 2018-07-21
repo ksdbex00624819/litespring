@@ -7,18 +7,19 @@ import com.like.zero.spring.core.io.DefaultResourceLoader;
 import com.like.zero.spring.core.io.Resource;
 
 /**
- * Created by like
- * 2018/6/24
+ * Created by like 2018/6/24
  */
-public abstract class AbstractApplicationContext extends DefaultResourceLoader implements ApplicationContext {
+public abstract class AbstractApplicationContext extends DefaultResourceLoader implements
+        ApplicationContext {
 
     private DefaultBeanFactory defaultBeanFactory;
 
     public AbstractApplicationContext(String configFile) {
         defaultBeanFactory = new DefaultBeanFactory();
-        XmlBeanDefinitionReader xmlBeanDefinitionReader = new XmlBeanDefinitionReader(defaultBeanFactory);
+        XmlBeanDefinitionReader xmlBeanDefinitionReader = new XmlBeanDefinitionReader(
+                defaultBeanFactory);
         Resource resource = getResourceByPath(configFile);
-        xmlBeanDefinitionReader.loadBeanDefinition(resource);
+        xmlBeanDefinitionReader.loadBeanDefinitions(resource);
         defaultBeanFactory.setBeanClassLoader(getClassLoader());
     }
 

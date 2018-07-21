@@ -3,8 +3,7 @@ package com.like.zero.spring.context.support;
 import com.like.zero.spring.core.io.Resource;
 
 /**
- * Created by like
- * 2018/6/24
+ * Created by like 2018/6/24
  */
 public class FileSystemXmlApplicationContext extends AbstractApplicationContext {
 

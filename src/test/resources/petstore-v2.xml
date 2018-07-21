@@ -2,10 +2,10 @@
 <beans>
 
     <bean id="petStore" class="com.like.zero.spring.service.v2.PetStoreService">
-        <property name="accountDao" ref="accountDao" />
-        <property name="itemDao" ref="itemDao" />
-        <property name="owner" value="like" />
-        <property name="version" value="2" />
+        <property name="accountDao" ref="accountDao"/>
+        <property name="itemDao" ref="itemDao"/>
+        <property name="owner" value="like"/>
+        <property name="version" value="2"/>
     </bean>
 
     <bean id="accountDao" class="com.like.zero.spring.dao.v2.AccountDao"></bean>

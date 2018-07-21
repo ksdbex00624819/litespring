@@ -7,8 +7,7 @@ import java.beans.PropertyEditorSupport;
 import java.text.NumberFormat;
 
 /**
- * Created by like
- * 2018/7/1
+ * Created by like 2018/7/1
  */
 public class CustomNumberEditor extends PropertyEditorSupport {
 
@@ -18,11 +17,13 @@ public class CustomNumberEditor extends PropertyEditorSupport {
 
     private final boolean allowEmpty;
 
-    public CustomNumberEditor(Class<? extends Number> numberClass, boolean allowEmpty) throws IllegalArgumentException {
+    public CustomNumberEditor(Class<? extends Number> numberClass, boolean allowEmpty)
+            throws IllegalArgumentException {
         this(numberClass, null, allowEmpty);
     }
 
-    public CustomNumberEditor(Class<? extends Number> numberClass, NumberFormat numberFormat, boolean allowEmpty) throws IllegalArgumentException {
+    public CustomNumberEditor(Class<? extends Number> numberClass, NumberFormat numberFormat,
+                              boolean allowEmpty) throws IllegalArgumentException {
         if (numberClass == null || !Number.class.isAssignableFrom(numberClass)) {
             throw new IllegalArgumentException("Property class must be a subclass of Number");
         }

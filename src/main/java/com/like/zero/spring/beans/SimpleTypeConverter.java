@@ -9,15 +9,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by like
- * 2018/7/1
+ * Created by like 2018/7/1
  */
 public class SimpleTypeConverter implements TypeConverter {
 
     private Map<Class<?>, PropertyEditor> defaultEditors;
 
     @Override
-    public <T> T convertIfNecessary(Object value, Class<T> requiredType) throws TypeMismatchException {
+    public <T> T convertIfNecessary(Object value, Class<T> requiredType)
+            throws TypeMismatchException {
         if (ClassUtils.isAssignableValue(requiredType, value)) {
             return (T) value;
         } else {
@@ -30,7 +30,8 @@ public class SimpleTypeConverter implements TypeConverter {
                 }
                 return (T) editor.getValue();
             } else {
-                throw new RuntimeException("Todo : can't convert value for " + value + " class:" + requiredType);
+                throw new RuntimeException(
+                        "Todo : can't convert value for " + value + " class:" + requiredType);
             }
         }
     }

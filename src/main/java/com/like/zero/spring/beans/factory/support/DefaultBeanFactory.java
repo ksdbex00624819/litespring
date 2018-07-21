@@ -16,10 +16,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Created by like
- * 2018/6/9
+ * Created by like 2018/6/9
  */
-public class DefaultBeanFactory extends DefaultSingletonBeanRegistry implements ConfigurableBeanFactory, BeanDefinitionRegistry {
+public class DefaultBeanFactory extends DefaultSingletonBeanRegistry implements
+        ConfigurableBeanFactory, BeanDefinitionRegistry {
 
     private ClassLoader classLoader;
 
@@ -29,7 +29,8 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry implements 
     }
 
     @Override
-    public void registerBeanDefinition(String beanName, BeanDefinition beanDefinition) throws BeanDefinitionStoreException {
+    public void registerBeanDefinition(String beanName, BeanDefinition beanDefinition)
+            throws BeanDefinitionStoreException {
         this.beanDefinitionMap.put(beanName, beanDefinition);
     }
 
@@ -55,7 +56,8 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry implements 
             }
             return createBean(beanDefinition);
         } catch (Exception e) {
-            throw new BeanCreationException("create bean for " + beanDefinition.getBeanClassName() + " failed", e);
+            throw new BeanCreationException(
+                    "create bean for " + beanDefinition.getBeanClassName() + " failed", e);
         }
 
     }
@@ -79,6 +81,12 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry implements 
         return bean;
     }
 
+    /**
+     * 设置bean的属性
+     *
+     * @param beanDefinition
+     * @param bean
+     */
     private void populateBean(BeanDefinition beanDefinition, Object bean) {
         List<PropertyValue> propertyValues = beanDefinition.getPropertyValues();
         if (propertyValues == null || propertyValues.isEmpty()) {
@@ -96,27 +104,33 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry implements 
                 for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
                     // 属性名称一样，调用set方法
                     if (propertyDescriptor.getName().equals(propertyName)) {
-                        Object convertedValue = converter.convertIfNecessary(resolvedValue, propertyDescriptor.getPropertyType());
+                        Object convertedValue = converter
+                                .convertIfNecessary(resolvedValue, propertyDescriptor.getPropertyType());
                         propertyDescriptor.getWriteMethod().invoke(bean, convertedValue);
                         break;
                     }
                 }
             }
         } catch (Exception ex) {
-            throw new BeanCreationException("Failed to obtain BeanInfo for class [" + beanDefinition.getBeanClassName() + "]", ex);
+            throw new BeanCreationException(
+                    "Failed to obtain BeanInfo for class [" + beanDefinition.getBeanClassName() + "]", ex);
         }
     }
 
 
     private Object instantiateBean(BeanDefinition beanDefinition) {
-        ClassLoader classLoader = this.getBeanClassLoader();
-        String beanClassName = beanDefinition.getBeanClassName();
-        try {
-            Class<?> clazz = classLoader.loadClass(beanDefinition.getBeanClassName());
-            return clazz.newInstance();
-        } catch (Exception e) {
-            throw new BeanCreationException("create bean for " + beanClassName + " failed", e);
+        if (beanDefinition.hasConstructorArgumentValues()) {
+            ConstructorResolver constructorResolver = new ConstructorResolver(this);
+            return constructorResolver.autowireConstructor(beanDefinition);
+        } else {
+            ClassLoader classLoader = this.getBeanClassLoader();
+            String beanClassName = beanDefinition.getBeanClassName();
+            try {
+                Class<?> clazz = classLoader.loadClass(beanDefinition.getBeanClassName());
+                return clazz.newInstance();
+            } catch (Exception e) {
+                throw new BeanCreationException("create bean for " + beanClassName + " failed", e);
+            }
         }
-
     }
 }

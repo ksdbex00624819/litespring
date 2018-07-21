@@ -1,10 +1,10 @@
 package com.like.zero.spring.util;
 
 /**
- * Created by like
- * 2018/6/30
+ * Created by like 2018/6/30
  */
 public class StringUtils {
+
     public static boolean hasLength(String str) {
         return hasLength((CharSequence) str);
     }

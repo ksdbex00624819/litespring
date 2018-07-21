@@ -7,8 +7,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Created by like
- * 2018/6/26
+ * Created by like 2018/6/26
  */
 public class DefaultSingletonBeanRegistry implements SingletonBeanRegistry {
 
@@ -22,7 +21,8 @@ public class DefaultSingletonBeanRegistry implements SingletonBeanRegistry {
         Object oldObject = singletonObjects.get(beanName);
         if (oldObject != null) {
             throw new IllegalStateException("Could not register object [" + singletonObject +
-                    "] under bean name '" + beanName + "': there is already object [" + oldObject + "] bound");
+                    "] under bean name '" + beanName + "': there is already object [" + oldObject
+                    + "] bound");
         }
         singletonObjects.put(beanName, singletonObject);
     }

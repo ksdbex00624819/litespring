@@ -1,14 +1,14 @@
 package com.like.zero.spring.beans.factory.support;
 
 import com.like.zero.spring.beans.BeanDefinition;
+import com.like.zero.spring.beans.ConstructorArgument;
 import com.like.zero.spring.beans.PropertyValue;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by like
- * 2018/6/11
+ * Created by like 2018/6/11
  */
 public class GenericBeanDefinition implements BeanDefinition {
 
@@ -24,9 +24,16 @@ public class GenericBeanDefinition implements BeanDefinition {
 
     private List<PropertyValue> propertyValues = new ArrayList<>();
 
+    private ConstructorArgument constructorArgument = new ConstructorArgument();
+
     public GenericBeanDefinition(String id, String beanClassName) {
         this.id = id;
         this.beanClassName = beanClassName;
+    }
+
+    @Override
+    public String getID() {
+        return this.id;
     }
 
     @Override
@@ -59,5 +66,15 @@ public class GenericBeanDefinition implements BeanDefinition {
     @Override
     public List<PropertyValue> getPropertyValues() {
         return this.propertyValues;
+    }
+
+    @Override
+    public ConstructorArgument getConstructorArgument() {
+        return this.constructorArgument;
+    }
+
+    @Override
+    public boolean hasConstructorArgumentValues() {
+        return !this.constructorArgument.isEmpty();
     }
 }

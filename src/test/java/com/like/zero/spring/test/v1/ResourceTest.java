@@ -1,4 +1,4 @@
-package com.like.zero.spring.v1;
+package com.like.zero.spring.test.v1;
 
 import com.like.zero.spring.core.io.ClassPathResource;
 import com.like.zero.spring.core.io.FileSystemResource;
@@ -10,8 +10,7 @@ import org.junit.Test;
 import java.io.InputStream;
 
 /**
- * Created by like
- * 2018/6/24
+ * Created by like 2018/6/24
  */
 public class ResourceTest {
 
@@ -40,6 +39,7 @@ public class ResourceTest {
 
     @Test
     public void testFileSystemResource() throws Exception {
-        resource = new FileSystemResource("F:\\icode\\zero-spring\\litespring\\src\\test\\resources\\petstore-v1.xml");
+        resource = new FileSystemResource(
+                "F:\\icode\\zero-spring\\litespring\\src\\test\\resources\\petstore-v1.xml");
     }
 }

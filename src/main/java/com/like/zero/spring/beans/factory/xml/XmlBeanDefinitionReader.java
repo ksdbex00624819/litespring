@@ -1,6 +1,7 @@
 package com.like.zero.spring.beans.factory.xml;
 
 import com.like.zero.spring.beans.BeanDefinition;
+import com.like.zero.spring.beans.ConstructorArgument;
 import com.like.zero.spring.beans.PropertyValue;
 import com.like.zero.spring.beans.factory.BeanDefinitionStoreException;
 import com.like.zero.spring.beans.factory.config.RuntimeBeanReference;
@@ -20,8 +21,7 @@ import java.io.InputStream;
 import java.util.Iterator;
 
 /**
- * Created by like
- * 2018/6/24
+ * Created by like 2018/6/24
  */
 public class XmlBeanDefinitionReader {
 
@@ -39,6 +39,10 @@ public class XmlBeanDefinitionReader {
 
     public static final String VALUE_ATTRIBUTE = "value";
 
+    public static final String CONSTRUCTOR_ARG_ELEMENT = "constructor-arg";
+
+    public static final String TYPE_ATTRIBUTE = "type";
+
     private final BeanDefinitionRegistry beanDefinitionRegistry;
 
     protected static final Log logger = LogFactory.getLog(XmlBeanDefinitionReader.class);
@@ -50,15 +54,10 @@ public class XmlBeanDefinitionReader {
     /**
      * 读取xml配置文件
      * <p>
-     * 1.使用ClassUtils获取ClassLoader，这里的ClassUtils是直接复制的Spring源码；
-     * 2.用ClassLoader将configFile变为InputStream
-     * 3.使用SAXReader读取InputStream,将InputStream变为Document
-     * 4.解析Document中的结点和属性
-     * 5.异常处理，关闭InputStream
-     *
-     * @param resource
+     * 1.使用ClassUtils获取ClassLoader，这里的ClassUtils是直接复制的Spring源码； 2.用ClassLoader将configFile变为InputStream
+     * 3.使用SAXReader读取InputStream,将InputStream变为Document 4.解析Document中的结点和属性 5.异常处理，关闭InputStream
      */
-    public void loadBeanDefinition(Resource resource) {
+    public void loadBeanDefinitions(Resource resource) {
         // 1.使用ClassUtils获取ClassLoader，这里的ClassUtils是直接复制的Spring源码；
 //        ClassLoader classLoader = ClassUtils.getDefaultClassLoader();
         // 2.用ClassLoader将configFile变为InputStream
@@ -83,13 +82,15 @@ public class XmlBeanDefinitionReader {
                 if (scope != null) {
                     beanDefinition.setScope(scope);
                 }
+                parseConstructorArgElements(element, beanDefinition);
                 // 解析bean内的标签
                 parsePropertyElement(element, beanDefinition);
                 beanDefinitionRegistry.registerBeanDefinition(id, beanDefinition);
             }
 
         } catch (Exception e) {
-            throw new BeanDefinitionStoreException("IOException parsing XML document from " + resource.getDescription(), e);
+            throw new BeanDefinitionStoreException(
+                    "IOException parsing XML document from " + resource.getDescription(), e);
         } finally {
             if (inputStream != null) {
                 try {
@@ -100,6 +101,35 @@ public class XmlBeanDefinitionReader {
             }
         }
     }
+
+    /**
+     * 解析bean标签里的constructor-arg
+     *
+     * @param beanElement
+     * @param beanDefinition
+     */
+    private void parseConstructorArgElements(Element beanElement, BeanDefinition beanDefinition) {
+        Iterator<Element> elementIterator = beanElement.elementIterator(CONSTRUCTOR_ARG_ELEMENT);
+        while (elementIterator.hasNext()) {
+            Element constructorElement = elementIterator.next();// 这里取到的是<constructor-arg>
+            parseConstructorArgElement(constructorElement, beanDefinition);
+        }
+    }
+
+    private void parseConstructorArgElement(Element constructorElement, BeanDefinition beanDefinition) {
+        String typeAttr = constructorElement.attributeValue(TYPE_ATTRIBUTE);
+        String nameAttr = constructorElement.attributeValue(NAME_ATTRIBUTE);
+        Object value = parsePropertyValue(constructorElement, beanDefinition, null);
+        ConstructorArgument.ValueHolder valueHolder = new ConstructorArgument.ValueHolder(value);
+        if (StringUtils.hasLength(typeAttr)) {
+            valueHolder.setType(typeAttr);
+        }
+        if (StringUtils.hasLength(nameAttr)) {
+            valueHolder.setName(nameAttr);
+        }
+        beanDefinition.getConstructorArgument().addArgumentValue(valueHolder);
+    }
+
 
     public void parsePropertyElement(Element beanElement, BeanDefinition beanDefinition) {
         Iterator<Element> elementIterator = beanElement.elementIterator(PROPERTY_ELEMENT);
@@ -119,8 +149,11 @@ public class XmlBeanDefinitionReader {
 
     }
 
-    public Object parsePropertyValue(Element element, BeanDefinition beanDefinition, String propertyName) {
-        String elementName = (propertyName != null) ? "<property> element for property '" + propertyName + "'" : "<constructor-arg> element";
+    public Object parsePropertyValue(Element element, BeanDefinition beanDefinition,
+                                     String propertyName) {
+        String elementName =
+                (propertyName != null) ? "<property> element for property '" + propertyName + "'"
+                        : "<constructor-arg> element";
 
         boolean hasRefAttribute = element.attribute(REF_ATTRIBUTE) != null;
         boolean hasValueAttribute = element.attribute(VALUE_ATTRIBUTE) != null;
@@ -128,12 +161,13 @@ public class XmlBeanDefinitionReader {
         if (hasRefAttribute) {
             String refName = element.attributeValue(REF_ATTRIBUTE);
             if (!StringUtils.hasLength(refName)) {
-
+                logger.error(elementName + " contains empty 'ref' attribute");
             }
             RuntimeBeanReference runtimeBeanReference = new RuntimeBeanReference(refName);
             return runtimeBeanReference;
         } else if (hasValueAttribute) {
-            TypedStringValue typedStringValue = new TypedStringValue(element.attributeValue(VALUE_ATTRIBUTE));
+            TypedStringValue typedStringValue = new TypedStringValue(
+                    element.attributeValue(VALUE_ATTRIBUTE));
             return typedStringValue;
         } else {
             throw new RuntimeException(elementName + "must specify a ref or value");

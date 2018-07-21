@@ -7,10 +7,10 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 
 /**
- * Created by like
- * 2018/7/1
+ * Created by like 2018/7/1
  */
 public class NumberUtils {
+
     public static <T extends Number> T parseNumber(String text, Class<T> targetClass) {
         Assert.notNull(text, "Text must not be null");
         Assert.notNull(targetClass, "Target class must not be null");
@@ -38,7 +38,8 @@ public class NumberUtils {
         }
     }
 
-    public static <T extends Number> T parseNumber(String text, Class<T> targetClass, NumberFormat numberFormat) {
+    public static <T extends Number> T parseNumber(String text, Class<T> targetClass,
+                                                   NumberFormat numberFormat) {
         if (numberFormat != null) {
             Assert.notNull(text, "Text must not be null");
             Assert.notNull(targetClass, "Target class must not be null");
@@ -112,18 +113,21 @@ public class NumberUtils {
             return (T) new BigDecimal(number.toString());
         } else {
             throw new IllegalArgumentException("Could not convert number [" + number + "] of type [" +
-                    number.getClass().getName() + "] to unknown target class [" + targetClass.getName() + "]");
+                    number.getClass().getName() + "] to unknown target class [" + targetClass.getName()
+                    + "]");
         }
     }
 
     private static void raiseOverflowException(Number number, Class targetClass) {
         throw new IllegalArgumentException("Could not convert number [" + number + "] of type [" +
-                number.getClass().getName() + "] to target class [" + targetClass.getName() + "]: overflow");
+                number.getClass().getName() + "] to target class [" + targetClass.getName()
+                + "]: overflow");
     }
 
     private static boolean isHexNumber(String value) {
         int index = (value.startsWith("-") ? 1 : 0);
-        return (value.startsWith("0x", index) || value.startsWith("0X", index) || value.startsWith("#", index));
+        return (value.startsWith("0x", index) || value.startsWith("0X", index) || value
+                .startsWith("#", index));
     }
 
     private static BigInteger decodeBigInteger(String value) {

@@ -5,10 +5,10 @@ import com.like.zero.spring.util.StringUtils;
 import java.beans.PropertyEditorSupport;
 
 /**
- * Created by like
- * 2018/7/1
+ * Created by like 2018/7/1
  */
 public class CustomBooleanEditor extends PropertyEditorSupport {
+
     public static final String VALUE_TRUE = "true";
     public static final String VALUE_FALSE = "false";
 

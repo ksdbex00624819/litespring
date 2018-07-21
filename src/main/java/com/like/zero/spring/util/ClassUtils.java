@@ -4,22 +4,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by like
- * 2018/6/11
+ * Created by like 2018/6/11
  */
 public abstract class ClassUtils {
 
     /**
-     * Map with primitive wrapper type as key and corresponding primitive
-     * type as value, for example: Integer.class -> int.class.
+     * Map with primitive wrapper type as key and corresponding primitive type as value, for example:
+     * Integer.class -> int.class.
      */
-    private static final Map<Class<?>, Class<?>> wrapperToPrimitiveTypeMap = new HashMap<Class<?>, Class<?>>(8);
+    private static final Map<Class<?>, Class<?>> wrapperToPrimitiveTypeMap = new HashMap<Class<?>, Class<?>>(
+            8);
 
     /**
-     * Map with primitive type as key and corresponding wrapper
-     * type as value, for example: int.class -> Integer.class.
+     * Map with primitive type as key and corresponding wrapper type as value, for example: int.class
+     * -> Integer.class.
      */
-    private static final Map<Class<?>, Class<?>> primitiveTypeToWrapperMap = new HashMap<Class<?>, Class<?>>(8);
+    private static final Map<Class<?>, Class<?>> primitiveTypeToWrapperMap = new HashMap<Class<?>, Class<?>>(
+            8);
 
     static {
         wrapperToPrimitiveTypeMap.put(Boolean.class, boolean.class);

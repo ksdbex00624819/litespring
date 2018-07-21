@@ -1,4 +1,4 @@
-package com.like.zero.spring.v1;
+package com.like.zero.spring.test.v1;
 
 import com.like.zero.spring.beans.BeanDefinition;
 import com.like.zero.spring.beans.factory.BeanCreationException;
@@ -14,8 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Created by like
- * 2018/6/9
+ * Created by like 2018/6/9
  */
 public class BeanFactoryTest {
 
@@ -31,14 +30,15 @@ public class BeanFactoryTest {
     @Test
     public void testGetBean() {
         Resource resource = new ClassPathResource("petstore-v1.xml");
-        xmlBeanDefinitionReader.loadBeanDefinition(resource);
+        xmlBeanDefinitionReader.loadBeanDefinitions(resource);
         BeanDefinition beanDefinition = beanFactory.getBeanDefinition("petStore");
 
         Assert.assertTrue(beanDefinition.isSingleton());
         Assert.assertFalse(beanDefinition.isPrototype());
         Assert.assertEquals(BeanDefinition.SCOPE_DEFAULT, beanDefinition.getScope());
 
-        Assert.assertEquals("com.like.zero.spring.service.v1.PetStoreService", beanDefinition.getBeanClassName());
+        Assert.assertEquals("com.like.zero.spring.service.v1.PetStoreService",
+                beanDefinition.getBeanClassName());
 
         PetStoreService petStore = (PetStoreService) beanFactory.getBean("petStore");
         Assert.assertNotNull(petStore);
@@ -50,25 +50,28 @@ public class BeanFactoryTest {
     @Test
     public void testGetBeanPrototype() {
         Resource resource = new ClassPathResource("petstore-v1.xml");
-        xmlBeanDefinitionReader.loadBeanDefinition(resource);
+        xmlBeanDefinitionReader.loadBeanDefinitions(resource);
         BeanDefinition beanDefinition = beanFactory.getBeanDefinition("petStorePrototype");
 
         Assert.assertFalse(beanDefinition.isSingleton());
         Assert.assertTrue(beanDefinition.isPrototype());
         Assert.assertNotEquals(BeanDefinition.SCOPE_DEFAULT, beanDefinition.getScope());
-        Assert.assertEquals("com.like.zero.spring.service.v1.PetStorePrototypeService", beanDefinition.getBeanClassName());
+        Assert.assertEquals("com.like.zero.spring.service.v1.PetStorePrototypeService",
+                beanDefinition.getBeanClassName());
 
-        PetStorePrototypeService petStorePrototype = (PetStorePrototypeService) beanFactory.getBean("petStorePrototype");
+        PetStorePrototypeService petStorePrototype = (PetStorePrototypeService) beanFactory
+                .getBean("petStorePrototype");
         Assert.assertNotNull(petStorePrototype);
 
-        PetStorePrototypeService petStorePrototype1 = (PetStorePrototypeService) beanFactory.getBean("petStorePrototype");
+        PetStorePrototypeService petStorePrototype1 = (PetStorePrototypeService) beanFactory
+                .getBean("petStorePrototype");
         Assert.assertTrue(petStorePrototype != petStorePrototype1);
     }
 
     @Test
     public void testInvalidBean() {
         Resource resource = new ClassPathResource("petstore-v1.xml");
-        xmlBeanDefinitionReader.loadBeanDefinition(resource);
+        xmlBeanDefinitionReader.loadBeanDefinitions(resource);
 
         try {
             beanFactory.getBean("invalidBean");
@@ -83,7 +86,7 @@ public class BeanFactoryTest {
     public void testInvalidXML() {
         try {
             Resource resource = new ClassPathResource("xxx-v1.xml");
-            xmlBeanDefinitionReader.loadBeanDefinition(resource);
+            xmlBeanDefinitionReader.loadBeanDefinitions(resource);
         } catch (BeanDefinitionStoreException e) {
             return;
         }

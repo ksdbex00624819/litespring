@@ -5,8 +5,7 @@ import com.like.zero.spring.beans.BeansException;
 /**
  * 创建bean出错时抛出异常
  * <p>
- * Created by like
- * 2018/6/12
+ * Created by like 2018/6/12
  */
 public class BeanCreationException extends BeansException {
 
@@ -23,6 +22,11 @@ public class BeanCreationException extends BeansException {
     public BeanCreationException(String beanName, String message) {
         super("Error create bean with name '" + beanName + "': " + message);
         this.beanName = beanName;
+    }
+
+    public BeanCreationException(String beanName, String msg, Throwable cause) {
+        this(beanName, msg);
+        initCause(cause);
     }
 
     public String getBeanName() {

@@ -5,8 +5,7 @@ import com.like.zero.spring.beans.BeansException;
 /**
  * 读取XML文件出错时抛出异常
  * <p>
- * Created by like
- * 2018/6/12
+ * Created by like 2018/6/12
  */
 public class BeanDefinitionStoreException extends BeansException {
 

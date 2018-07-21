@@ -1,8 +1,7 @@
 package com.like.zero.spring.beans;
 
 /**
- * Created by like
- * 2018/7/1
+ * Created by like 2018/7/1
  */
 public class TypeMismatchException extends BeansException {
 

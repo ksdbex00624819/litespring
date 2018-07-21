@@ -3,8 +3,7 @@ package com.like.zero.spring.beans.factory;
 import com.like.zero.spring.beans.BeansException;
 
 /**
- * Created by like
- * 2018/6/24
+ * Created by like 2018/6/24
  */
 public class NoSuchBeanDefinitionException extends BeansException {
 

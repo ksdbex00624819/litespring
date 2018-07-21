@@ -7,8 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Created by like
- * 2018/6/24
+ * Created by like 2018/6/24
  */
 public class ClassPathResource implements Resource {
 
@@ -29,7 +28,7 @@ public class ClassPathResource implements Resource {
     public InputStream getInputStream() throws IOException {
         InputStream inputStream = this.classLoader.getResourceAsStream(this.path);
         if (inputStream == null) {
-            throw new FileNotFoundException(path + "cannot be opened");
+            throw new FileNotFoundException(path + " cannot be opened");
         }
         return inputStream;
     }

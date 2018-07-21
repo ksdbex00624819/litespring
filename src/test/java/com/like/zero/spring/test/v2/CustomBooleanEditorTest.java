@@ -1,12 +1,11 @@
-package com.like.zero.spring.v2;
+package com.like.zero.spring.test.v2;
 
 import com.like.zero.spring.beans.propertyeditors.CustomBooleanEditor;
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Created by like
- * 2018/7/1
+ * Created by like 2018/7/1
  */
 public class CustomBooleanEditorTest {
 

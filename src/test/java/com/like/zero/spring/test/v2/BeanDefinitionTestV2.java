@@ -1,4 +1,4 @@
-package com.like.zero.spring.v2;
+package com.like.zero.spring.test.v2;
 
 import com.like.zero.spring.beans.BeanDefinition;
 import com.like.zero.spring.beans.PropertyValue;
@@ -14,8 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Created by like
- * 2018/6/30
+ * Created by like 2018/6/30
  */
 public class BeanDefinitionTestV2 {
 
@@ -23,8 +22,9 @@ public class BeanDefinitionTestV2 {
     public void testGetBeanDefinition() {
         Resource resource = new ClassPathResource("petstore-v2.xml");
         DefaultBeanFactory defaultBeanFactory = new DefaultBeanFactory();
-        XmlBeanDefinitionReader xmlBeanDefinitionReader = new XmlBeanDefinitionReader(defaultBeanFactory);
-        xmlBeanDefinitionReader.loadBeanDefinition(resource);
+        XmlBeanDefinitionReader xmlBeanDefinitionReader = new XmlBeanDefinitionReader(
+                defaultBeanFactory);
+        xmlBeanDefinitionReader.loadBeanDefinitions(resource);
         BeanDefinition beanDefinition = defaultBeanFactory.getBeanDefinition("petStore");
 
         List<PropertyValue> propertyValues = beanDefinition.getPropertyValues();
@@ -43,8 +43,10 @@ public class BeanDefinitionTestV2 {
 
     }
 
-    private PropertyValue getPropertyValue(final String propertyName, List<PropertyValue> propertyValues) {
-        List<PropertyValue> filterPropertyValues = propertyValues.stream().filter(property -> property.getName().equals(propertyName)).collect(Collectors.toList());
+    private PropertyValue getPropertyValue(final String propertyName,
+                                           List<PropertyValue> propertyValues) {
+        List<PropertyValue> filterPropertyValues = propertyValues.stream()
+                .filter(property -> property.getName().equals(propertyName)).collect(Collectors.toList());
         if (filterPropertyValues != null && !filterPropertyValues.isEmpty()) {
             return filterPropertyValues.get(0);
         }
